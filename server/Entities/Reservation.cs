@@ -7,6 +7,11 @@ namespace TheGarageAPI.Entities
 {
     public partial class Reservation
     {
+        public Reservation()
+        {
+            Invoices = new HashSet<Invoice>();
+        }
+
         public string ReservationId { get; set; }
         public string DataUserId { get; set; }
         public string VehiclePlate { get; set; }
@@ -19,5 +24,6 @@ namespace TheGarageAPI.Entities
         public virtual ReservationStatus ReservationStatus { get; set; }
         public virtual Slot Slot { get; set; }
         public virtual Vehicle VehiclePlateNavigation { get; set; }
+        public virtual ICollection<Invoice> Invoices { get; set; }
     }
 }

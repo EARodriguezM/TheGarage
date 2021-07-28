@@ -18,6 +18,8 @@ namespace TheGarageAPI.Entities
         }
 
         public virtual DbSet<DataUser> DataUsers { get; set; }
+        public virtual DbSet<Invoice> Invoices { get; set; }
+        public virtual DbSet<InvoiceStatus> InvoiceStatuses { get; set; }
         public virtual DbSet<Reservation> Reservations { get; set; }
         public virtual DbSet<ReservationStatus> ReservationStatuses { get; set; }
         public virtual DbSet<Slot> Slots { get; set; }
@@ -104,6 +106,62 @@ namespace TheGarageAPI.Entities
                     .HasForeignKey(d => d.UserTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("DATA_USER_FK--USER_TYPE");
+            });
+
+            modelBuilder.Entity<Invoice>(entity =>
+            {
+                entity.ToTable("INVOICE");
+
+                entity.Property(e => e.InvoiceId)
+                    .HasMaxLength(10)
+                    .HasColumnName("INVOICE_ID");
+
+                entity.Property(e => e.InvoiceStatusId).HasColumnName("INVOICE_STATUS_ID");
+
+                entity.Property(e => e.PaidDate)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("PAID_DATE");
+
+                entity.Property(e => e.Price)
+                    .HasColumnType("decimal(19, 4)")
+                    .HasColumnName("PRICE");
+
+                entity.Property(e => e.ReservationId)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .HasColumnName("RESERVATION_ID");
+
+                entity.HasOne(d => d.InvoiceStatus)
+                    .WithMany(p => p.Invoices)
+                    .HasForeignKey(d => d.InvoiceStatusId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("INVOICE_FK--INVOICE_STATUS");
+
+                entity.HasOne(d => d.Reservation)
+                    .WithMany(p => p.Invoices)
+                    .HasForeignKey(d => d.ReservationId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("INVOICE_FK--RESERVATION");
+            });
+
+            modelBuilder.Entity<InvoiceStatus>(entity =>
+            {
+                entity.ToTable("INVOICE_STATUS");
+
+                entity.HasIndex(e => e.Description, "INVOICE_STATUS_DESCRIPTION_UK")
+                    .IsUnique();
+
+                entity.Property(e => e.InvoiceStatusId).HasColumnName("INVOICE_STATUS_ID");
+
+                entity.Property(e => e.Description)
+                    .IsRequired()
+                    .HasMaxLength(20)
+                    .HasColumnName("DESCRIPTION");
+
+                entity.Property(e => e.Status)
+                    .IsRequired()
+                    .HasColumnName("STATUS")
+                    .HasDefaultValueSql("((1))");
             });
 
             modelBuilder.Entity<Reservation>(entity =>
