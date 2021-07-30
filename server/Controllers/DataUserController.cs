@@ -73,19 +73,19 @@ namespace TheGarageAPI.Controllers
         }
 
         [HttpPut("{dataUserId}")]
-        public IActionResult Update(string dataUserId, [FromForm]UpdateRequest updateRequest)
+        public IActionResult Update([FromForm]UpdateRequest updateRequest)
         {
             
             // Only allow admins to access other user records
             var currentUserId = (User.Identity.Name).ToString();
             
-            if (dataUserId != currentUserId || !User.IsInRole("1"))
+            if (updateRequest.DataUserId != currentUserId || !User.IsInRole("1"))
                 return Forbid();
 
             try
             {
                 // Update user 
-                _dataUserService.Update(updateRequest, dataUserId, updateRequest.Password);
+                _dataUserService.Update(updateRequest, updateRequest.Password);
                 return Ok();
             }
             catch (AppException ex)

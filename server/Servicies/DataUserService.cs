@@ -24,7 +24,7 @@ namespace TheGarageAPI.Servicies
         Task<DataUser> Register(RegisterRequest registerRequest);
         Task<IEnumerable<DataUser>> GetAll();
         Task<DataUser> GetById(string dataUserId);
-        Task Update(UpdateRequest updateRequest, string dataUserId, string password = null);
+        Task Update(UpdateRequest updateRequest, string password = null);
 
         Task Delete (string dataUserId);
     }
@@ -63,6 +63,7 @@ namespace TheGarageAPI.Servicies
             return authenticateResponse;
         }
 
+        ////////////////////////////////////////////////////////////////////////////////
         public async Task<DataUser> Register(RegisterRequest registerRequest)
         {
             registerRequest.Email = registerRequest.Email.ToLower();
@@ -74,7 +75,7 @@ namespace TheGarageAPI.Servicies
                 throw new AppException("Password is required");
 
             if (await _context.DataUsers.AnyAsync(x => x.DataUserId == dataUser.DataUserId))
-                throw new AppException("Id \"" + dataUser.DataUserId + "\" is regiostered");
+                throw new AppException("Id \"" + dataUser.DataUserId + "\" is registered");
 
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
@@ -92,17 +93,20 @@ namespace TheGarageAPI.Servicies
             var dataUsers =  await _context.DataUsers.ToListAsync();
             return dataUsers.WithoutPasswords();
         }
+        ////////////////////////////////////////////////////////////////////////////////
         public async Task<DataUser> GetById(string dataUserId)
         {
             var userFinded = await _context.DataUsers.FindAsync(dataUserId);
             return userFinded.WithoutPassword();
         }
-        public async Task Update(UpdateRequest updateRequest, string dataUserId, string password = null)
+
+        ////////////////////////////////////////////////////////////////////////////////
+        public async Task Update(UpdateRequest updateRequest, string password = null)
         {
 
             var dataUser = _mapper.Map<DataUser>(updateRequest);
             
-            var user = _context.DataUsers.Find(dataUserId);
+            var user = _context.DataUsers.Find(updateRequest.DataUserId);
 
             if (user == null)
                 throw new AppException("User not found");
@@ -155,6 +159,8 @@ namespace TheGarageAPI.Servicies
             _context.DataUsers.Update(user);
             await _context.SaveChangesAsync();
         }
+
+        ////////////////////////////////////////////////////////////////////////////////
         public async Task Delete (string dataUserId)
         {
             var user = await _context.DataUsers.FindAsync(dataUserId);
