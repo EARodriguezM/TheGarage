@@ -1,7 +1,7 @@
 @import '~bootstrap/scss/mixins/breakpoints';
 @import '../../../../themes.scss';
 
-@include nb-install-component() {
+:host {
   width: 100%;
   display: flex;
   justify-content: space-between;
