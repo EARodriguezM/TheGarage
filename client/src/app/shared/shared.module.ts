@@ -49,7 +49,7 @@ const COMPONENTS = [
   imports: [
     CommonModule,
     ...NB_MODULES,
-    NbThemeModule.forRoot({ name: 'default' }),
+    NbThemeModule
   ],
   exports: [
     CommonModule,
