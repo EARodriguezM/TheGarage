@@ -3,7 +3,9 @@
 @import '~@nebular/theme/styles/global/breakpoints';
 
 
-:host {
+@include nb-install-component() {
+  @include nb-theme-global();
+
   width: 100%;
   display: flex;
   justify-content: space-between;
