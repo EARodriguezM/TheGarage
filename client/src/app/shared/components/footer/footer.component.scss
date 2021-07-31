@@ -3,14 +3,12 @@
 @import '~@nebular/theme/styles/global/breakpoints';
 
 
-@include nb-install-component() {
-  @include nb-theme-global();
-
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
+  .created-by{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
   .socials {
     font-size: 2rem;
 
@@ -24,10 +22,3 @@
       }
     }
   }
-
-  @include media-breakpoint-down(is) {
-    .socials {
-      font-size: 1.5rem;
-    }
-  }
-}
