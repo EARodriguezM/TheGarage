@@ -8,3 +8,6 @@ Documentation/*
 !.vscode/launch.json
 !.vscode/extensions.json
 .history/*
+
+# App_draw
+client_1/*
