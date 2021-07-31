@@ -12,12 +12,15 @@ import {
   NbButtonModule,
   NbSelectModule,
   NbIconModule,
+  NbThemeModule,
 } from '@nebular/theme';
 
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 
-import { HeaderComponent } from './components/header/header.component';
-import { FooterComponent } from './components/footer/footer.component';
+import {
+  HeaderComponent,
+  FooterComponent
+} from './components';
 
 const NB_MODULES = [
   NbLayoutModule,
@@ -45,7 +48,8 @@ const COMPONENTS = [
   ],
   imports: [
     CommonModule,
-    ...NB_MODULES
+    ...NB_MODULES,
+    NbThemeModule.forRoot({ name: 'default' }),
   ],
   exports: [
     CommonModule,
