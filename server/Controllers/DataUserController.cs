@@ -85,7 +85,7 @@ namespace TheGarageAPI.Controllers
             try
             {
                 // Update user 
-                _dataUserService.Update(updateRequest, updateRequest.Password);
+                _dataUserService.Update(updateRequest);
                 return Ok();
             }
             catch (AppException ex)

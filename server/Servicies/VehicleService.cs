@@ -1,14 +1,13 @@
 using System.Collections.Generic;
-using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using Microsoft.EntityFrameworkCore;
 
 using AutoMapper;
 
 using TheGarageAPI.Helpers;
 using TheGarageAPI.Entities;
 using TheGarageAPI.Models.Vehicle;
-using Microsoft.Extensions.Options;
-using Microsoft.EntityFrameworkCore;
 
 namespace TheGarageAPI.Servicies
 {
@@ -41,7 +40,7 @@ namespace TheGarageAPI.Servicies
         {
             var vehicle = _mapper.Map<Vehicle>(registerRequest);
 
-            if (await _context.Vehicles.AnyAsync(x => x.VehiclePlate == vehicle.VehiclePlate))
+            if (await GetByPlate(vehicle.VehiclePlate) == null)
                 throw new AppException("Vehicle plate \"" + vehicle.VehiclePlate + "\" is registered");
 
             await _context.Vehicles.AddAsync(vehicle);
@@ -70,7 +69,7 @@ namespace TheGarageAPI.Servicies
 
             var vehicle = _mapper.Map<Vehicle>(updateRequest);
 
-            var vehicleInDatabase = _context.Vehicles.Find(updateRequest.VehiclePlate);
+            var vehicleInDatabase = await GetByPlate(updateRequest.VehiclePlate);
 
             if (vehicleInDatabase == null)
                 throw new AppException("Vehicle not found");
@@ -130,7 +129,7 @@ namespace TheGarageAPI.Servicies
         ////////////////////////////////////////////////////////////////////////////////
         public async Task Delete(string vehiclePlate)
         {
-            var vehicle = await _context.Vehicles.FindAsync(vehiclePlate);
+            var vehicle = await GetByPlate(vehiclePlate);
             if (vehicle != null)
             {
                 _context.Vehicles.Remove(vehicle);

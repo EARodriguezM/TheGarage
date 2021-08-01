@@ -24,7 +24,7 @@ namespace TheGarageAPI.Servicies
         Task<DataUser> Register(RegisterRequest registerRequest);
         Task<IEnumerable<DataUser>> GetAll();
         Task<DataUser> GetById(string dataUserId);
-        Task Update(UpdateRequest updateRequest, string password = null);
+        Task Update(UpdateRequest updateRequest);
 
         Task Delete (string dataUserId);
     }
@@ -74,8 +74,12 @@ namespace TheGarageAPI.Servicies
             if (string.IsNullOrWhiteSpace(password))
                 throw new AppException("Password is required");
 
-            if (await _context.DataUsers.AnyAsync(x => x.DataUserId == dataUser.DataUserId))
+            if (await _context.DataUsers.AnyAsync(x => x.Email == dataUser.Email))
+                throw new AppException("Email \"" + dataUser.Email + "\" was taken");
+
+            if (await GetById(dataUser.DataUserId) != null)
                 throw new AppException("Id \"" + dataUser.DataUserId + "\" is registered");
+
 
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
@@ -101,12 +105,12 @@ namespace TheGarageAPI.Servicies
         }
 
         ////////////////////////////////////////////////////////////////////////////////
-        public async Task Update(UpdateRequest updateRequest, string password = null)
+        public async Task Update(UpdateRequest updateRequest)
         {
 
             var dataUser = _mapper.Map<DataUser>(updateRequest);
             
-            var user = _context.DataUsers.Find(updateRequest.DataUserId);
+            var user = await GetById(updateRequest.DataUserId);
 
             if (user == null)
                 throw new AppException("User not found");
@@ -147,10 +151,10 @@ namespace TheGarageAPI.Servicies
                 user.SecondSurname = dataUser.SecondSurname;
 
             //Update password if provided
-            if (!string.IsNullOrWhiteSpace(password))
+            if (!string.IsNullOrWhiteSpace(updateRequest.Password))
             {
                 byte[] passwordHash, passwordSalt;
-                CreatePasswordHash(password, out passwordHash, out passwordSalt);
+                CreatePasswordHash(updateRequest.Password, out passwordHash, out passwordSalt);
 
                 user.PasswordHash = passwordHash;
                 user.PasswordSalt = passwordSalt;
