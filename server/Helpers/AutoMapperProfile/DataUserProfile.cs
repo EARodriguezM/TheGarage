@@ -3,16 +3,14 @@ using AutoMapper;
 using TheGarageAPI.Entities;
 using TheGarageAPI.Models.DataUser;
 
-namespace TheGarageAPI.Helpers
+namespace TheGarageAPI.Helpers.AutoMapperProfile
 {
-    public class AutoMapperProfile : Profile
+    public class DataUserProfile : Profile
     {
         //More Information in https://www.thecodebuzz.com/configure-automapper-asp-net-core-profile-map-object/
         //CreateMap<Source, Destination>();
-
-        public AutoMapperProfile()
-        {
-
+        public DataUserProfile()
+        {    
             CreateMap<AuthenticateRequest, DataUser>()
                 .ForMember(dest => dest.Email, src => src.MapFrom(src => src.Email))
             ;
@@ -38,8 +36,7 @@ namespace TheGarageAPI.Helpers
                 .ForMember(dest => dest.ProfilePicture, src => src.MapFrom(src => src.ProfilePicture))
                 .ForMember(dest => dest.UserTypeId, src => src.MapFrom(src => src.UserTypeId))
             ;
-            CreateMap<DataUser, AuthenticateResponse>();
+            CreateMap<DataUser, AuthenticateResponse>();      
         }
-        
     }
 }
