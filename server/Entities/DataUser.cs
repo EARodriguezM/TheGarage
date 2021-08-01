@@ -9,6 +9,7 @@ namespace TheGarageAPI.Entities
     {
         public DataUser()
         {
+            RDataUserVehicles = new HashSet<RDataUserVehicle>();
             Reservations = new HashSet<Reservation>();
         }
 
@@ -26,6 +27,7 @@ namespace TheGarageAPI.Entities
         public byte UserTypeId { get; set; }
 
         public virtual UserType UserType { get; set; }
+        public virtual ICollection<RDataUserVehicle> RDataUserVehicles { get; set; }
         public virtual ICollection<Reservation> Reservations { get; set; }
     }
 }

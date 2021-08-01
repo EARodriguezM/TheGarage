@@ -20,6 +20,7 @@ namespace TheGarageAPI.Entities
         public virtual DbSet<DataUser> DataUsers { get; set; }
         public virtual DbSet<Invoice> Invoices { get; set; }
         public virtual DbSet<InvoiceStatus> InvoiceStatuses { get; set; }
+        public virtual DbSet<RDataUserVehicle> RDataUserVehicles { get; set; }
         public virtual DbSet<Reservation> Reservations { get; set; }
         public virtual DbSet<ReservationStatus> ReservationStatuses { get; set; }
         public virtual DbSet<Slot> Slots { get; set; }
@@ -162,6 +163,45 @@ namespace TheGarageAPI.Entities
                     .IsRequired()
                     .HasColumnName("STATUS")
                     .HasDefaultValueSql("((1))");
+            });
+
+            modelBuilder.Entity<RDataUserVehicle>(entity =>
+            {
+                entity.HasKey(e => e.RelationId)
+                    .HasName("R-DATA_USER-VEHICLE_PK");
+
+                entity.ToTable("R-DATA_USER-VEHICLE");
+
+                entity.Property(e => e.RelationId)
+                    .HasMaxLength(10)
+                    .HasColumnName("RELATION_ID");
+
+                entity.Property(e => e.DataUserId)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .HasColumnName("DATA_USER_ID");
+
+                entity.Property(e => e.Status)
+                    .IsRequired()
+                    .HasColumnName("STATUS")
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.VehiclePlate)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .HasColumnName("VEHICLE_PLATE");
+
+                entity.HasOne(d => d.DataUser)
+                    .WithMany(p => p.RDataUserVehicles)
+                    .HasForeignKey(d => d.DataUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("R-DATA_USER-VEHICLE_FK--DATA_USER");
+
+                entity.HasOne(d => d.VehiclePlateNavigation)
+                    .WithMany(p => p.RDataUserVehicles)
+                    .HasForeignKey(d => d.VehiclePlate)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("R-DATA_USER-VEHICLE_FK--VEHICLE");
             });
 
             modelBuilder.Entity<Reservation>(entity =>
