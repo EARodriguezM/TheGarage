@@ -1,5 +1,3 @@
-
-
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -66,6 +64,21 @@ namespace TheGarageAPI.Controllers
             {
                 // Update vehicle
                 _vehicleService.Update(updateRequest);
+                return Ok();
+            }
+            catch (AppException ex)
+            {
+                // Return error message if there was an exception
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpDelete("{vehiclePlate}")]
+        public async Task<IActionResult> Delete(string vehiclePlate)
+        {
+            try
+            {
+                await _vehicleService.Delete(vehiclePlate);
                 return Ok();
             }
             catch (AppException ex)

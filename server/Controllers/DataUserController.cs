@@ -94,6 +94,20 @@ namespace TheGarageAPI.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
-        
+
+        [HttpDelete("{dataUserId}")]
+        public async Task<IActionResult> Delete(string dataUserId)
+        {
+            try
+            {
+                await _dataUserService.Delete(dataUserId);
+                return Ok();
+            }
+            catch (AppException ex)
+            {
+                // Return error message if there was an exception
+                return BadRequest(new { message = ex.Message });
+            }
+        }
     }
 }
