@@ -61,8 +61,8 @@ namespace TheGarageAPI.Servicies
         ////////////////////////////////////////////////////////////////////////////////
         public async Task<SlotStatus> GetSlotStatusById(string slotStatusId)
         {
-            var sloStatusesFinded = await _context.SlotStatuses.FindAsync(slotStatusId);
-            return sloStatusesFinded;
+            var slotStatusesFinded = await _context.SlotStatuses.FindAsync(slotStatusId);
+            return slotStatusesFinded;
         }
 
         ////////////////////////////////////////////////////////////////////////////////
@@ -73,7 +73,7 @@ namespace TheGarageAPI.Servicies
             var slotStatusInDatabase = await GetSlotStatusById(updateRequest.SlotStatusId.ToString());
 
             if (slotStatusInDatabase == null)
-                throw new AppException("Vehicle type not found");
+                throw new AppException("Slot status not found");
 
             //Update description of slot status if it has changed
             if (!string.IsNullOrWhiteSpace(slotStatusInDatabase.Description) && slotStatus.Description != slotStatusInDatabase.Description)
