@@ -25,13 +25,11 @@ namespace TheGarageAPI.Servicies
 
         private readonly TheGarageContext _context;
         private readonly IMapper _mapper;
-        private readonly AppSettigns _appSettings;
 
-        public VehicleService(TheGarageContext context, IMapper mapper, IOptions<AppSettigns> appSettings)
+        public VehicleService(TheGarageContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
-            _appSettings = appSettings.Value;
         }
 
         #region Public methods

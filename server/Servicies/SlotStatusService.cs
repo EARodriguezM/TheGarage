@@ -26,13 +26,11 @@ namespace TheGarageAPI.Servicies
 
         private readonly TheGarageContext _context;
         private readonly IMapper _mapper;
-        private readonly AppSettigns _appSettings;
 
-        public SlotStatusService(TheGarageContext context, IMapper mapper, AppSettigns appSettings)
+        public SlotStatusService(TheGarageContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
-            _appSettings = appSettings;
         }
 
         ////////////////////////////////////////////////////////////////////////////////
